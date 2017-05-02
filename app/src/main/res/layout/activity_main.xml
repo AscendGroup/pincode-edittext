@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical">
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginBottom="32dp"
+		android:orientation="vertical">
+
+		<com.oakkub.android.PinCodeEditText
+			android:id="@+id/simplePinCodeEditText"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:maxLength="4"
+			android:minHeight="56dp"
+			android:paddingEnd="32dp"
+			android:paddingLeft="32dp"
+			android:paddingRight="32dp"
+			android:paddingStart="32dp"
+			android:textColor="@android:color/white"
+			android:textSize="30sp"
+			app:pinBackgroundColor="@color/colorPrimary"
+			app:pinBorderColor="@color/colorAccent"
+			app:pinMaskCharacter="#"
+			app:pinNextPinBackgroundColor="@android:color/holo_red_dark"
+			app:pinNextPinBorderColor="@android:color/holo_green_dark"
+			app:pinShowAsPassword="true"/>
+
+		<Button
+			android:id="@+id/toggleButton"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center_horizontal"/>
+
+	</LinearLayout>
+
+	<com.oakkub.android.PinCodeEditText
+		android:id="@+id/textPasswordPinCodeEditText"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:inputType="textVisiblePassword"
+		android:maxLength="4"
+		android:minHeight="56dp"
+		android:paddingEnd="32dp"
+		android:paddingLeft="32dp"
+		android:paddingRight="32dp"
+		android:paddingStart="32dp"
+		app:pinNextPinBackgroundColor="@android:color/holo_orange_light"/>
+
+	<com.oakkub.android.PinCodeEditText
+		android:id="@+id/defaultNumberPasswordPinCodeEditText"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:inputType="numberPassword"
+		android:minHeight="56dp"
+		android:paddingEnd="32dp"
+		android:paddingLeft="32dp"
+		android:paddingRight="32dp"
+		android:paddingStart="32dp"/>
+
+	<com.oakkub.android.PinCodeEditText
+		android:id="@+id/defaultNumberPasswordPinCodeWithoutHighlightColorEditText"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:inputType="numberPassword"
+		android:minHeight="56dp"
+		android:paddingEnd="32dp"
+		android:paddingLeft="32dp"
+		android:paddingRight="32dp"
+		android:paddingStart="32dp"
+		app:pinShowHighlightNextPin="false"/>
+
+</LinearLayout>

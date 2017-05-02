@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<declare-styleable name="PinCodeEditText">
+		<attr name="pinNextPinBackgroundColor" format="color|reference"/>
+		<attr name="pinBackgroundColor" format="color|reference"/>
+		<attr name="pinNextPinBorderColor" format="color|reference"/>
+		<attr name="pinBorderColor" format="color|reference"/>
+		<attr name="pinMaskCharacter" format="string|reference"/>
+		<attr name="pinShowHighlightNextPin" format="boolean"/>
+		<attr name="pinShowAsPassword" format="boolean"/>
+		<attr name="pinGapWidth" format="dimension|reference"/>
+	</declare-styleable>
+
+</resources>
