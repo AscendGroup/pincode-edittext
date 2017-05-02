@@ -25,8 +25,14 @@ import com.oakkub.android.utils.DimenUtils;
 
 public class PinCodeEditText extends AppCompatEditText {
 
+	/**
+	 * android: namespace
+	 */
 	private static final String XML_NAMESPACE_ANDROID = "http://schemas.android.com/apk/res/android";
 
+	/**
+	 * Keys for save state variables
+	 */
 	private static final String KEY_SUPER_STATE = "SUPER_STATE";
 	private static final String KEY_CHARACTER_NUMBER = "CHARACTER_NUMBER";
 	private static final String KEY_GAP_WIDTH = "GAP_WIDTH";
@@ -34,9 +40,12 @@ public class PinCodeEditText extends AppCompatEditText {
 	private static final String KEY_SHOULD_SHOW_AS_PASSWORD = "SHOULD_SHOW_AS_PASSWORD";
 	private static final String KEY_STRING_MASKER = "STRING_MASKER";
 
-	private static final int DEFAULT_COLOR_BACKGROUND_PIN_SELECTED = 0xFFD5D5D5;
+	/**
+	 * Default colors
+	 */
+	private static final int DEFAULT_HIGHLIGHT_COLOR_BACKGROUND = 0xFFD5D5D5;
 	private static final int DEFAULT_COLOR_BACKGROUND_PIN = 0xFFF5F5F5;
-	private static final int DEFAULT_COLOR_SELECTED_BORDER = 0xFFC5C5C5;
+	private static final int DEFAULT_HIGHLIGHT_COLOR_BORDER = 0xFFC5C5C5;
 	private static final int DEFAULT_COLOR_BORDER = 0xFFD5D5D5;
 
 	private static final int DEFAULT_LINE_STROKE = 1;
@@ -44,13 +53,13 @@ public class PinCodeEditText extends AppCompatEditText {
 	private static final int DEFAULT_MAX_LENGTH = 4;
 
 	private int[][] mPinCodeColorStates = new int[][]{
-			new int[]{android.R.attr.state_selected},
+			new int[]{android.R.attr.state_selected}, // State for the highlighted pin
 			new int[]{0} // Default state
 	};
 
-	private int mColorBackgroundPinSelected = DEFAULT_COLOR_BACKGROUND_PIN_SELECTED;
+	private int mHighlightColorBackground = DEFAULT_HIGHLIGHT_COLOR_BACKGROUND;
 	private int mColorBackgroundPin = DEFAULT_COLOR_BACKGROUND_PIN;
-	private int mColorSelectedBorder = DEFAULT_COLOR_SELECTED_BORDER;
+	private int mHighlightColorBorder = DEFAULT_HIGHLIGHT_COLOR_BORDER;
 	private int mColorBorder = DEFAULT_COLOR_BORDER;
 
 	private int mCharacterNumber;
@@ -115,9 +124,9 @@ public class PinCodeEditText extends AppCompatEditText {
 	private void initAttrs(AttributeSet attrs, int defStyleAttr) {
 		TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.PinCodeEditText, defStyleAttr, 0);
 		try {
-			mColorBackgroundPinSelected = a.getColor(R.styleable.PinCodeEditText_pinNextPinBackgroundColor, DEFAULT_COLOR_BACKGROUND_PIN_SELECTED);
+			mHighlightColorBackground = a.getColor(R.styleable.PinCodeEditText_pinNextPinBackgroundColor, DEFAULT_HIGHLIGHT_COLOR_BACKGROUND);
 			mColorBackgroundPin = a.getColor(R.styleable.PinCodeEditText_pinBackgroundColor, DEFAULT_COLOR_BACKGROUND_PIN);
-			mColorSelectedBorder = a.getColor(R.styleable.PinCodeEditText_pinNextPinBorderColor, DEFAULT_COLOR_SELECTED_BORDER);
+			mHighlightColorBorder = a.getColor(R.styleable.PinCodeEditText_pinNextPinBorderColor, DEFAULT_HIGHLIGHT_COLOR_BORDER);
 			mColorBorder = a.getColor(R.styleable.PinCodeEditText_pinBorderColor, DEFAULT_COLOR_BORDER);
 			mHighlightNextPin = a.getBoolean(R.styleable.PinCodeEditText_pinShowHighlightNextPin, true);
 			mShowAsPassword = a.getBoolean(R.styleable.PinCodeEditText_pinShowAsPassword, true);
@@ -170,7 +179,7 @@ public class PinCodeEditText extends AppCompatEditText {
 		super.setOnEditorActionListener(new OnEditorActionListener() {
 			@Override
 			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-				// For some reasons the soft keyboard does not response when tap at editor button
+				// For some reasons the soft keyboard does not response when tap :(
 				if (mOnEditorActionListener != null) {
 					return mOnEditorActionListener.onEditorAction(v, actionId, event);
 				} else {
@@ -182,12 +191,12 @@ public class PinCodeEditText extends AppCompatEditText {
 
 	private void initColorStates() {
 		int[] pinCodeColors = new int[]{
-				mColorBackgroundPinSelected,
+				mHighlightColorBackground,
 				mColorBackgroundPin,
 		};
 
 		int[] pinCodeBorderColors = new int[]{
-				mColorSelectedBorder,
+				mHighlightColorBorder,
 				mColorBorder,
 		};
 
@@ -211,6 +220,8 @@ public class PinCodeEditText extends AppCompatEditText {
 
 	@Override
 	public Parcelable onSaveInstanceState() {
+		// I prefer to save state this way :)
+
 		Bundle args = new Bundle(6);
 		Parcelable superState = super.onSaveInstanceState();
 
@@ -255,48 +266,40 @@ public class PinCodeEditText extends AppCompatEditText {
 
 	@Override
 	protected void onDraw(Canvas canvas) {
+		getPaint().setColor(getCurrentTextColor());
+
 		int paddingStart = ViewCompat.getPaddingStart(this);
 		int paddingEnd = ViewCompat.getPaddingEnd(this);
 		int width = getMeasuredWidth() - paddingStart - paddingEnd;
 
 		float pinCodeSize = calculatePinCodeSize(width, mCharacterNumber, mGapWidth);
-		drawLineForEachPin(canvas, mCharacterNumber, pinCodeSize, mGapWidth);
+		String text = mStringMasker.getMaskText(getText()).toString();
+		drawLineForEachPin(canvas, text, mCharacterNumber, pinCodeSize, mGapWidth);
 	}
 
 	private float calculatePinCodeSize(int width, int characterNumber, float gapWidth) {
-		float pinCodeSize;
+		// Get total space that will be using
+		float totalSpaceWidth = gapWidth * (characterNumber - 1);
 
-		if (gapWidth < 0) {
-			pinCodeSize = width / (characterNumber * 2 - 1);
-		} else {
+		// Remove total space from width
+		float widthWithoutSpace = width - totalSpaceWidth;
 
-			// Get total space that will be using
-			float totalSpaceWidth = gapWidth * (characterNumber - 1);
-
-			// Remove total space from width
-			float widthWithoutSpace = width - totalSpaceWidth;
-
-			// Total character size for each character
-			pinCodeSize = widthWithoutSpace / characterNumber;
-		}
-
-		return pinCodeSize;
+		// Total character size for each character
+		return widthWithoutSpace / characterNumber;
 	}
 
 	@SuppressWarnings("UnnecessaryLocalVariable")
 	private void drawLineForEachPin(Canvas canvas,
-									float totalPinCode,
+									String text,
+									float characterNumber,
 									float pinCodeSize,
 									float gapWidth) {
 		int startX = ViewCompat.getPaddingStart(this);
 		int top = getPaddingTop();
 		int bottom = getMeasuredHeight() - getPaddingBottom();
-
-		String text = mStringMasker.getMaskText(getText()).toString();
 		int textLength = text.length();
-		getPaint().setColor(getCurrentTextColor());
 
-		for (int i = 0; i < totalPinCode; i++) {
+		for (int i = 0; i < characterNumber; i++) {
 			float endX = startX + pinCodeSize;
 
 			boolean shouldSetSelectedPin = i == textLength && isFocused();

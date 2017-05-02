@@ -40,6 +40,6 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 	private void setCheckboxText() {
-		mToggleButton.setText(mSimplePinCodeEditText.isShowAsPassword() ? "Show" : "Hide");
+		mToggleButton.setText(mSimplePinCodeEditText.isShowAsPassword() ? "Show password" : "Hide password");
 	}
 }
