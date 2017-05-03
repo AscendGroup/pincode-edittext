@@ -80,8 +80,8 @@ public class PinCodeEditText extends AppCompatEditText {
 	private ColorStateList mBackgroundColorState;
 	private ColorStateList mBorderColorState;
 
-	OnClickListener mOnClickListener;
-	OnEditorActionListener mOnEditorActionListener;
+	View.OnClickListener mOnClickListener;
+	TextView.OnEditorActionListener mOnEditorActionListener;
 	StringMasker mStringMasker;
 
 	public PinCodeEditText(Context context) {
@@ -291,7 +291,7 @@ public class PinCodeEditText extends AppCompatEditText {
 
 		float pinCodeSize = calculatePinCodeSize(width, mCharacterNumber, mGapWidth);
 		String text = mStringMasker.getMaskText(getText()).toString();
-		drawLineForEachPin(canvas, text, mCharacterNumber, DimenUtils.dpToPx(getContext(), 56), mGapWidth);
+		drawLineForEachPin(canvas, text, mCharacterNumber, pinCodeSize, mGapWidth);
 	}
 
 	private float calculatePinCodeSize(int width, int characterNumber, float gapWidth) {
