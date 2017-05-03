@@ -7,23 +7,30 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.AppCompatEditText;
+import android.text.InputFilter;
 import android.text.InputType;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
 
+import com.oakkub.android.utils.BitFlagUtils;
 import com.oakkub.android.utils.DimenUtils;
+
+import java.util.Arrays;
 
 /**
  * Created by metas on 3/31/2017 AD.
  */
 
 public class PinCodeEditText extends AppCompatEditText {
+
+	private static final String TAG = PinCodeEditText.class.getSimpleName();
 
 	/**
 	 * android: namespace
@@ -118,6 +125,8 @@ public class PinCodeEditText extends AppCompatEditText {
 		initClickListener();
 		initOnEditorActionListener();
 		initColorStates();
+
+		setMaxLength(mCharacterNumber);
 		setDefaultInputType();
 	}
 
@@ -208,14 +217,22 @@ public class PinCodeEditText extends AppCompatEditText {
 		// Default input type of EditText: InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE
 		// InputType.TYPE_TEXT_FLAG_MULTI_LINE is not allow for this PinCodeEditText
 
-		int multiLineInputType = InputType.TYPE_TEXT_FLAG_MULTI_LINE;
-		boolean isInputTypeMultilineExists = (getInputType() & multiLineInputType) == multiLineInputType;
+		unsetInputTypeFlag(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+	}
 
-		if (isInputTypeMultilineExists) {
-			int inputTypeWithoutMultiline = getInputType() & ~multiLineInputType;
+	private void setMaxLength(int maxLength) {
+		InputFilter[] editTextFilters = getFilters();
+		int length = editTextFilters.length;
+		InputFilter[] customFilters = Arrays.copyOf(editTextFilters, length + 1);
+		customFilters[length] = new InputFilter.LengthFilter(maxLength);
+		setFilters(customFilters);
+	}
+
+	private void unsetInputTypeFlag(int... flagsToBeUnset) {
+		for (int unsetFlag : flagsToBeUnset) {
+			int inputTypeWithoutMultiline = BitFlagUtils.unsetFlag(getInputType(), unsetFlag);
 			setInputType(inputTypeWithoutMultiline);
 		}
-		setInputType(getInputType() | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
 	}
 
 	@Override
@@ -274,7 +291,7 @@ public class PinCodeEditText extends AppCompatEditText {
 
 		float pinCodeSize = calculatePinCodeSize(width, mCharacterNumber, mGapWidth);
 		String text = mStringMasker.getMaskText(getText()).toString();
-		drawLineForEachPin(canvas, text, mCharacterNumber, pinCodeSize, mGapWidth);
+		drawLineForEachPin(canvas, text, mCharacterNumber, DimenUtils.dpToPx(getContext(), 56), mGapWidth);
 	}
 
 	private float calculatePinCodeSize(int width, int characterNumber, float gapWidth) {
@@ -305,8 +322,8 @@ public class PinCodeEditText extends AppCompatEditText {
 			boolean shouldSetSelectedPin = i == textLength && isFocused();
 			updatePaintColor(shouldSetSelectedPin, mHighlightNextPin);
 
-			canvas.drawRect(startX, top, endX, bottom, mBackgroundPaint);
-			canvas.drawRect(startX, top, endX, bottom, mBorderPaint);
+			canvas.drawRoundRect(new RectF(startX, top, endX, bottom), 0, 0, mBackgroundPaint);
+			canvas.drawRoundRect(new RectF(startX, top, endX, bottom), 0, 0, mBorderPaint);
 
 			if (i < textLength) {
 				int start = i;
@@ -323,11 +340,7 @@ public class PinCodeEditText extends AppCompatEditText {
 				canvas.drawText(text, start, end, x, y, getPaint());
 			}
 
-			if (gapWidth < 0) {
-				startX += pinCodeSize * 2;
-			} else {
-				startX += pinCodeSize + gapWidth;
-			}
+			startX += pinCodeSize + gapWidth;
 		}
 	}
 

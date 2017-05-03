@@ -11,9 +11,6 @@ public class MainActivity extends AppCompatActivity {
 
 	private PinCodeEditText mSimplePinCodeEditText;
 	private Button mToggleButton;
-	private PinCodeEditText mTextPasswordPinCodeEditText;
-	private PinCodeEditText mDefaultNumberPasswordPinCodeEditText;
-	private PinCodeEditText mDefaultNumberPasswordPinCodeWithoutHighlightColorEditText;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -25,9 +22,6 @@ public class MainActivity extends AppCompatActivity {
 	private void initView() {
 		mSimplePinCodeEditText = (PinCodeEditText) findViewById(R.id.simplePinCodeEditText);
 		mToggleButton = (Button) findViewById(R.id.toggleButton);
-		mTextPasswordPinCodeEditText = (PinCodeEditText) findViewById(R.id.textPasswordPinCodeEditText);
-		mDefaultNumberPasswordPinCodeEditText = (PinCodeEditText) findViewById(R.id.defaultNumberPasswordPinCodeEditText);
-		mDefaultNumberPasswordPinCodeWithoutHighlightColorEditText = (PinCodeEditText) findViewById(R.id.defaultNumberPasswordPinCodeWithoutHighlightColorEditText);
 
 		setCheckboxText();
 		mToggleButton.setOnClickListener(new View.OnClickListener() {

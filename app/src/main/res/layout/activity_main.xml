@@ -25,11 +25,12 @@
 			android:textColor="@android:color/white"
 			android:textSize="30sp"
 			app:pinBackgroundColor="@color/colorPrimary"
-			app:pinBorderColor="@color/colorAccent"
-			app:pinMaskCharacter="#"
-			app:pinNextPinBackgroundColor="@android:color/holo_red_dark"
-			app:pinNextPinBorderColor="@android:color/holo_green_dark"
-			app:pinShowAsPassword="true"/>
+			app:pinBorderColor="@color/colorPrimary"
+			app:pinMaskCharacter="๐"
+			app:pinNextPinBackgroundColor="@color/colorAccent"
+			app:pinNextPinBorderColor="@color/colorAccent"
+			app:pinShowAsPassword="true"
+			app:pinShowHighlightNextPin="true"/>
 
 		<Button
 			android:id="@+id/toggleButton"
@@ -40,39 +41,15 @@
 	</LinearLayout>
 
 	<com.oakkub.android.PinCodeEditText
-		android:id="@+id/textPasswordPinCodeEditText"
+		android:id="@+id/defaultNumberPasswordPinCodeEditText"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:inputType="textVisiblePassword"
+		android:inputType="numberPassword"
 		android:maxLength="4"
 		android:minHeight="56dp"
 		android:paddingEnd="32dp"
 		android:paddingLeft="32dp"
 		android:paddingRight="32dp"
-		android:paddingStart="32dp"
-		app:pinNextPinBackgroundColor="@android:color/holo_orange_light"/>
-
-	<com.oakkub.android.PinCodeEditText
-		android:id="@+id/defaultNumberPasswordPinCodeEditText"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:inputType="numberPassword"
-		android:minHeight="56dp"
-		android:paddingEnd="32dp"
-		android:paddingLeft="32dp"
-		android:paddingRight="32dp"
 		android:paddingStart="32dp"/>
-
-	<com.oakkub.android.PinCodeEditText
-		android:id="@+id/defaultNumberPasswordPinCodeWithoutHighlightColorEditText"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:inputType="numberPassword"
-		android:minHeight="56dp"
-		android:paddingEnd="32dp"
-		android:paddingLeft="32dp"
-		android:paddingRight="32dp"
-		android:paddingStart="32dp"
-		app:pinShowHighlightNextPin="false"/>
 
 </LinearLayout>
