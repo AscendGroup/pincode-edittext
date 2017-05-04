@@ -21,7 +21,7 @@ Or Maven:
 </dependency>
 ```
 
-# Usage
+Usage
 --------
 Include `PinCodeEditText` in your layout XML
 ```xml
