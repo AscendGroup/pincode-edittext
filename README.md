@@ -1,5 +1,5 @@
 # PinCodeEditText
-PinCodeEditText is and EditText with pin code style, It is easy to use and customizable.
+An EditText with pin code style, It is easy to use and customizable.
 
 Requirement
 --------
